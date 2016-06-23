@@ -273,6 +273,50 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
+            '/zerotier',
+            function (Request $request, UserInfoInterface $u) {
+                $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
+
+                return $this->templateManager->render(
+                    'vpnPortalZeroTier',
+                    [
+                        'networks' => $networks,
+                    ]
+                );
+
+            },
+            $userAuth
+        );
+
+        $service->post(
+            '/zerotier/network',
+            function (Request $request, UserInfoInterface $u) {
+                // XXX validate name
+                $networkName = $request->getPostParameter('name');
+
+                $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName);
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
+            },
+            $userAuth
+        );
+
+        $service->post(
+            '/zerotier/member',
+            function (Request $request, UserInfoInterface $u) {
+                // XXX validate
+                $networkId = $request->getPostParameter('network_id');
+                // XXX make sure the network_id is owned by the user!
+                $clientId = $request->getPostParameter('client_id');
+
+                $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
+            },
+            $userAuth
+        );
+
+        $service->get(
             '/otp',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = GoogleAuthenticator::generateRandom();

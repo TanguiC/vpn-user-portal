@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html lang="en">
+{% include 'head.twig' %}
+<body>
+    {% include 'header.twig' %}
+
+    <ul class="mainMenu">
+      <li><a href="home">{% trans "Home" %}</a></li>
+      <li><a href="new">{% trans "New" %}</a></li>
+      <li><a href="configurations">{% trans "Configurations" %}</a></li>
+      <li class="active"><a href="zerotier">{% trans "ZeroTier" %}</a></li>
+      <li><a href="account">{% trans "Account" %}</a></li>
+      <li><a href="documentation">{% trans "Documentation" %}</a></li>
+    </ul>
+
+    <h2>{% trans "ZeroTier" %}</h2>
+
+    <h3>My ID</h3>
+    <p>The Client ID of this user. It is automatically added to networks you create. <em>Not yet implemented</em>.</p>
+    <p><strong>d7000f00ec</strong></p>
+
+    <h3>My Networks</h3>
+    <p>Overview of networks you created.</p>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Members</th></tr>
+        </thead>
+        <tbody>
+            {% for network in networks %}
+                <tr>
+                    <td>{{ network.id|e }}</td>
+                    <td>{{ network.name|e }}</td>
+                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
+                    <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
+                    <td>
+                        <ul>
+                        {% for member in network.members %}
+                            <li>{{ member|e }}</li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
+
+    <h3>Other Networks</h3>
+    <p>This will list other networks on this controller that you are allowed to join. Needs to be implemented still.</p>
+
+    <h3>New Network</h3>
+    <p>Create a new network.</p>
+
+    <form method="post" action="zerotier/network">
+        <fieldset>
+            <legend>{% trans "New" %}</legend>
+            <label for="inputName">{% trans "Name" %}</label>
+            <input type="text" name="name" id="inputName" maxlength="10" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <button type="submit">{% trans "Create" %}</button>
+        </fieldset>
+    </form>
+
+    <h3>Add Client</h3>
+    <p>Add a client to a particular network. This will go away when automatically joining other networks is possible.</p>
+
+    <form method="post" action="zerotier/member">
+        <fieldset>
+            <legend>{% trans "Add Client" %}</legend>
+            <label for="networkId">{% trans "Network" %}</label>
+            <select id="networkId" name="network_id">
+                {% for network in networks %}
+                    <option value="{{ network.id|e }}">{{ network.name|e }}</option>
+                {% endfor %}
+            </select>
+            <label for="inputName">{% trans "Client ID" %}</label>
+            <input type="text" name="client_id" id="inputName" maxlength="10" placeholder="{% trans 'Client ID' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <label><input type="checkbox" disabled="disabled" name="isBridge">Client is a bridge (not implemented yet)  </label>
+            <button type="submit">{% trans "Create" %}</button>
+        </fieldset>
+    </form>
+
+    {% include 'footer.twig' %}
+</body>
+</html>
