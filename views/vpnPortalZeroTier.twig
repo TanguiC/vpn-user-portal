@@ -42,11 +42,9 @@
     </table>
     <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
 
-    <h3>Other Networks</h3>
-    <p>This will list other networks on this controller that you are allowed to join. Needs to be implemented still.</p>
-
     <h3>New Network</h3>
-    <p>Create a new network.</p>
+    <p>Create a new network. The Client identifier(s) you have set on the <a href="account">Account</a> page will
+be automatically added to the network.</p>
 
     <form method="post" action="zerotier/network">
         <fieldset>
@@ -75,6 +73,9 @@
             <button type="submit">{% trans "Create" %}</button>
         </fieldset>
     </form>
+
+    <h3>Other Networks</h3>
+    <p>This will list other networks on this controller that you are allowed to join. <strong>NOT IMPLEMENTED YET</strong.</p>
 
     {% include 'footer.twig' %}
 </body>
