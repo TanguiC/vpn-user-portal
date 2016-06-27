@@ -295,7 +295,13 @@ class VpnPortalModule implements ServiceModuleInterface
                 // XXX validate name
                 $networkName = $request->getPostParameter('name');
 
-                $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName);
+                $networkId = $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName);
+
+                // add all identifiers from this user
+                $clientIdentifiers = $this->vpnServerApiClient->getZeroTierClients($u->getUserId());
+                foreach($clientIdentifiers as $clientId) {
+                    $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);
+                }
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
             },

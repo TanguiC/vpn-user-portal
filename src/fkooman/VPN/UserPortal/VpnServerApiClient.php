@@ -100,7 +100,7 @@ class VpnServerApiClient extends VpnApiClient
             [
                 'body' => ['user_id' => $userId, 'network_name' => $networkName],
             ]
-        )['data']['ok'];
+        )['data']['network_id'];
     }
 
     public function getZeroTierClients($userId)
