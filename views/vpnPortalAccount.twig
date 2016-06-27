@@ -67,7 +67,31 @@
         </table>
     {% endif %}
 
-    {% include 'footer.twig' %}
+    <h3>ZeroTier</h3>
+    <p>
+        Here you can set your <a href="https://zerotier.com/">ZeroTier</a> 
+        client identifier(s). It will be automatically added to networks you create 
+        and used when joining networks you are invited to.
+    </p>
 
+    {% if zeroTierClients is not empty %}
+    <p>Your currently registered ZeroTier client identifiers:</p>
+    <ul>
+        {% for clientId in zeroTierClients %}
+            <li>{{ clientId|e }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" action="zerotier/client">
+        <fieldset>	
+            <legend>{% trans "Client ID" %}</legend>
+            <label for="client_id">{% trans "Client ID" %}</label>
+            <input type="text" name="client_id" id="client_id" maxlength="10" placeholder="{% trans 'Client ID' %}" required pattern="[a-fA-F0-9]{10}">
+            <button type="submit">{% trans "Set" %}</button>
+        </fieldset>
+    </form>
+
+    {% include 'footer.twig' %}
 </body>
 </html>

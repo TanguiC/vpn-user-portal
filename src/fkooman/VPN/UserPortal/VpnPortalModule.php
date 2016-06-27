@@ -232,6 +232,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                         'groupMembership' => $groupMembership,
+                        'zeroTierClients' => $this->vpnServerApiClient->getZeroTierClients($u->getUserId()),
                     )
                 );
             },
@@ -312,6 +313,19 @@ class VpnPortalModule implements ServiceModuleInterface
                 $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
+            },
+            $userAuth
+        );
+
+        $service->post(
+            '/zerotier/client',
+            function (Request $request, UserInfoInterface $u) {
+                // XXX validate
+                $clientId = $request->getPostParameter('client_id');
+
+                $this->vpnServerApiClient->registerZeroTierClient($u->getUserId(), $clientId);
+
+                return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
             },
             $userAuth
         );
