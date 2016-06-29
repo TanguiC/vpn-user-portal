@@ -278,10 +278,17 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
 
+                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
+                $groupList = [];
+                foreach($userGroups as $userGroup) {
+                    $groupList[] = ['id' => $userGroup, 'name' => $userGroup];
+                }
+
                 return $this->templateManager->render(
                     'vpnPortalZeroTier',
                     [
                         'networks' => $networks,
+                        'groupList' => $groupList,
                     ]
                 );
 
@@ -294,10 +301,13 @@ class VpnPortalModule implements ServiceModuleInterface
             function (Request $request, UserInfoInterface $u) {
                 // XXX validate name
                 $networkName = $request->getPostParameter('name');
+                // XXX validate groupId
+                $groupId = $request->getPostParameter('groupId');
 
-                $networkId = $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName);
+                $networkId = $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName, $groupId);
 
                 // add all identifiers from this user
+                // XXX will go away as a crontab will take care of this I guess
                 $clientIdentifiers = $this->vpnServerApiClient->getZeroTierClients($u->getUserId());
                 foreach($clientIdentifiers as $clientId) {
                     $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);

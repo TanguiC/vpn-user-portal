@@ -90,7 +90,7 @@ class VpnServerApiClient extends VpnApiClient
         )['data']['networks'];
     }
 
-    public function addZeroTierNetwork($userId, $networkName)
+    public function addZeroTierNetwork($userId, $networkName, $groupId)
     {
         $requestUri = sprintf('%s/zt/networks', $this->vpnServerApiUri);
 
@@ -98,7 +98,7 @@ class VpnServerApiClient extends VpnApiClient
             'POST',
             $requestUri,
             [
-                'body' => ['user_id' => $userId, 'network_name' => $networkName],
+                'body' => ['user_id' => $userId, 'network_name' => $networkName, 'group_id' => $groupId],
             ]
         )['data']['network_id'];
     }

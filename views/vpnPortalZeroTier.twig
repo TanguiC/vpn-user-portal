@@ -20,7 +20,7 @@
     <p>Overview of networks you created.</p>
     <table>
         <thead>
-            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Members</th></tr>
+            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>
         </thead>
         <tbody>
             {% for network in networks %}
@@ -29,12 +29,17 @@
                     <td>{{ network.name|e }}</td>
                     <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
                     <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
+                    <td>{% if network.group_id %}{{ network.group_id|e }}{% else %}N/A{% endif %}</td>
                     <td>
-                        <ul>
-                        {% for member in network.members %}
-                            <li>{{ member|e }}</li>
-                        {% endfor %}
-                        </ul>
+                        {% if network.members is empty %}
+                            N/A
+                        {% else %}
+                            <ul>
+                            {% for member in network.members %}
+                                <li>{{ member|e }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -43,20 +48,28 @@
     <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
 
     <h3>New Network</h3>
-    <p>Create a new network. The Client identifier(s) you have set on the <a href="account">Account</a> page will
-be automatically added to the network.</p>
+    <p>Create a new network. Do not forget to set your client identifier(s) on the <a href="account">Account</a> page so they will
+be automatically added to the network. Choose a group you want to share this network with. People who are a member of this group and registered their client in this portal will automatically be added.</p>
 
     <form method="post" action="zerotier/network">
         <fieldset>
             <legend>{% trans "New" %}</legend>
             <label for="inputName">{% trans "Name" %}</label>
             <input type="text" name="name" id="inputName" maxlength="10" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <label for="groupId">{% trans "Group" %}</label>
+            <select id="groupId" name="groupId">
+                {% for group in groupList %}
+                    <option value="{{ group.id|e }}">{{ group.name|e }}</option>
+                {% endfor %}
+            </select>
+        </fieldset>
+        <fieldset>
             <button type="submit">{% trans "Create" %}</button>
         </fieldset>
     </form>
 
-    <h3>Add Client</h3>
-    <p>Add a client to a particular network. This will go away when automatically joining other networks is possible.</p>
+    <h3>Manually Add Client</h3>
+    <p>Add a client to a particular network. Use this if they can't be automatically added based on group memberships.</p>
 
     <form method="post" action="zerotier/member">
         <fieldset>
@@ -69,14 +82,11 @@ be automatically added to the network.</p>
             </select>
             <label for="inputName">{% trans "Client ID" %}</label>
             <input type="text" name="client_id" id="inputName" maxlength="10" placeholder="{% trans 'Client ID' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
-            <label><input type="checkbox" disabled="disabled" name="isBridge">Client is a bridge (not implemented yet)  </label>
-            <button type="submit">{% trans "Create" %}</button>
+        </fieldset>
+        <fieldset>
+            <button type="submit">{% trans "Add" %}</button>
         </fieldset>
     </form>
-
-    <h3>Other Networks</h3>
-    <p>This will list other networks on this controller that you are allowed to join. <strong>NOT IMPLEMENTED YET</strong.</p>
-
     {% include 'footer.twig' %}
 </body>
 </html>
