@@ -55,7 +55,7 @@ be automatically added to the network. Choose a group you want to share this net
         <fieldset>
             <legend>{% trans "New" %}</legend>
             <label for="inputName">{% trans "Name" %}</label>
-            <input type="text" name="name" id="inputName" maxlength="10" placeholder="{% trans 'Name' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <input type="text" name="name" id="inputName" maxlength="10" placeholder="{% trans 'Name' %}" required pattern="[a-zA-Z0-9-_.@]+">
             <label for="groupId">{% trans "Group" %}</label>
             <select id="groupId" name="groupId">
                 {% for group in groupList %}
@@ -81,7 +81,7 @@ be automatically added to the network. Choose a group you want to share this net
                 {% endfor %}
             </select>
             <label for="inputName">{% trans "Client ID" %}</label>
-            <input type="text" name="client_id" id="inputName" maxlength="10" placeholder="{% trans 'Client ID' %}" autofocus required pattern="[a-zA-Z0-9-_.@]+">
+            <input type="text" name="client_id" id="inputName" maxlength="10" placeholder="{% trans 'Client ID' %}" required pattern="[a-zA-Z0-9-_.@]+">
         </fieldset>
         <fieldset>
             <button type="submit">{% trans "Add" %}</button>
