@@ -16,8 +16,15 @@
 
     <h2>{% trans "ZeroTier" %}</h2>
 
+    <p>
+Below you will be able to create and see networks you are a member of. To be 
+able to actually connect to them set your client identifier(s) on the 
+<a href="account">Account</a> page so they will be automatically added to the 
+networks you have access to. You can then join them.
+    </p>
+
     <h3>My Networks</h3>
-    <p>Overview of networks you created.</p>
+    <p>Overview of networks you created. Members will be automatically added based on group membership.</p>
     <table>
         <thead>
             <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>
@@ -47,9 +54,45 @@
     </table>
     <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
 
+    <h3>Other Networks</h3>
+    <p>Overview of networks created by others you have access to. </p>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>
+        </thead>
+        <tbody>
+            {% for network in networks %}
+                <tr>
+                    <td>{{ network.id|e }}</td>
+                    <td>{{ network.name|e }}</td>
+                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
+                    <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
+                    <td>{% if network.group_id %}{{ network.group_id|e }}{% else %}N/A{% endif %}</td>
+                    <td>
+                        {% if network.members is empty %}
+                            N/A
+                        {% else %}
+                            <ul>
+                            {% for member in network.members %}
+                                <li>{{ member|e }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
+
+
+
     <h3>New Network</h3>
-    <p>Create a new network. Do not forget to set your client identifier(s) on the <a href="account">Account</a> page so they will
-be automatically added to the network. Choose a group you want to share this network with. People who are a member of this group and registered their client in this portal will automatically be added.</p>
+    <p>
+Create a new network. Choose a group you want to share this network with. 
+People who are a member of this group and registered their client in this 
+portal will automatically be added to the network.
+    </p>
 
     <form method="post" action="zerotier/network">
         <fieldset>
@@ -68,6 +111,7 @@ be automatically added to the network. Choose a group you want to share this net
         </fieldset>
     </form>
 
+<!-- 
     <h3>Manually Add Client</h3>
     <p>Add a client to a particular network. Use this if they can't be automatically added based on group memberships.</p>
 
@@ -86,7 +130,9 @@ be automatically added to the network. Choose a group you want to share this net
         <fieldset>
             <button type="submit">{% trans "Add" %}</button>
         </fieldset>
-    </form>
+    </form> 
+-->
+
     {% include 'footer.twig' %}
 </body>
 </html>
