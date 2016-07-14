@@ -279,6 +279,11 @@ class VpnPortalModule implements ServiceModuleInterface
                 $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
 
+                // add group_id to group_name
+                for($i = 0; $i < count($networks) ; $i++) {
+                    $networks[$i]['group_name'] = self::idToName($userGroups, $networks[$i]['group_id']);
+                }
+
                 return $this->templateManager->render(
                     'vpnPortalZeroTier',
                     [
@@ -504,5 +509,16 @@ class VpnPortalModule implements ServiceModuleInterface
         if (0 === preg_match('/^[0-9]{6}$/', $otpKey)) {
             throw new BadRequestException('invalid OTP key format');
         }
+    }
+
+    private static function idToName(array $userGroups, $groupId)
+    {
+        foreach($userGroups as $userGroup) {
+            if($userGroup['id'] === $groupId) {
+                return $userGroup['displayName'];
+            }
+        }
+
+        return $groupId;
     }
 }

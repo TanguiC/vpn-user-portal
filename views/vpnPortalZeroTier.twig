@@ -36,7 +36,7 @@ networks you have access to. You can then join them.
                     <td>{{ network.name|e }}</td>
                     <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
                     <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
-                    <td>{% if network.group_id %}{{ network.group_id|e }}{% else %}N/A{% endif %}</td>
+                    <td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td>
                     <td>
                         {% if network.members is empty %}
                             N/A
