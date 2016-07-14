@@ -1,5 +1,17 @@
 # Changelog
 
+## 9.3.2 (2016-07-14)
+- work with new group handling in vpn-server-api
+
+## 9.3.1 (2016-07-09)
+- again show the revoked configurations in the user portal, although
+  configurations can no longer be revoked, we do not want them to 
+  be completely gone from the UI
+
+## 9.3.0 (2016-07-09)
+- no longer offer to revoke configurations, only disable as we phase out 
+  revocation completely
+
 ## 9.2.0 (2016-06-07)
 - add optional SURFconext Voot support
 

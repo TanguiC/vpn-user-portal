@@ -186,7 +186,7 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->post(
-            '/revoke',
+            '/disable',
             function (Request $request, UserInfoInterface $u) {
                 $configName = $request->getPostParameter('name');
                 $formConfirm = $request->getPostParameter('confirm');
@@ -194,7 +194,7 @@ class VpnPortalModule implements ServiceModuleInterface
                 if (is_null($formConfirm)) {
                     // ask for confirmation
                     return $this->templateManager->render(
-                        'vpnPortalConfirmRevoke',
+                        'vpnPortalConfirmDisable',
                         array(
                             'configName' => $configName,
                         )
@@ -203,7 +203,7 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 if ('yes' === $formConfirm) {
                     // user said yes
-                    $this->revokeConfig($u->getUserId(), $configName);
+                    $this->disableConfig($u->getUserId(), $configName);
                 }
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'configurations', 302);
@@ -231,7 +231,7 @@ class VpnPortalModule implements ServiceModuleInterface
                         'otpEnabled' => $otpSecret,
                         'userId' => $u->getUserId(),
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
-                        'groupMembership' => $groupMembership,
+                        'userGroups' => $userGroups,
                         'zeroTierClients' => $this->vpnServerApiClient->getZeroTierClients($u->getUserId()),
                     )
                 );
@@ -277,18 +277,13 @@ class VpnPortalModule implements ServiceModuleInterface
             '/zerotier',
             function (Request $request, UserInfoInterface $u) {
                 $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
-
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
-                $groupList = [];
-                foreach($userGroups as $userGroup) {
-                    $groupList[] = ['id' => $userGroup, 'name' => $userGroup];
-                }
 
                 return $this->templateManager->render(
                     'vpnPortalZeroTier',
                     [
                         'networks' => $networks,
-                        'groupList' => $groupList,
+                        'userGroups' => $userGroups,
                     ]
                 );
 
@@ -487,14 +482,11 @@ class VpnPortalModule implements ServiceModuleInterface
         return $response;
     }
 
-    private function revokeConfig($userId, $configName)
+    private function disableConfig($userId, $configName)
     {
         Utils::validateConfigName($configName);
 
-        $this->vpnConfigApiClient->revokeConfiguration($userId, $configName);
-
-        // trigger a CRL reload in the servers
-        $this->vpnServerApiClient->triggerCrlReload();
+        $this->vpnServerApiClient->disableCommonName($userId.'_'.$configName);
 
         // disconnect the client
         $this->vpnServerApiClient->killCommonName(sprintf('%s_%s', $userId, $configName));

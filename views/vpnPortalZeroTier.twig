@@ -54,38 +54,36 @@ networks you have access to. You can then join them.
     </table>
     <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
 
-    <h3>Other Networks</h3>
-    <p>Overview of networks created by others you have access to. </p>
-    <table>
-        <thead>
-            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>
-        </thead>
-        <tbody>
-            {% for network in networks %}
-                <tr>
-                    <td>{{ network.id|e }}</td>
-                    <td>{{ network.name|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
-                    <td>{% if network.group_id %}{{ network.group_id|e }}{% else %}N/A{% endif %}</td>
-                    <td>
-                        {% if network.members is empty %}
-                            N/A
-                        {% else %}
-                            <ul>
-                            {% for member in network.members %}
-                                <li>{{ member|e }}</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
-
-
+<!--    <h3>Other Networks</h3>-->
+<!--    <p>Overview of networks created by others you have access to. </p>-->
+<!--    <table>-->
+<!--        <thead>-->
+<!--            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {% for network in networks %}-->
+<!--                <tr>-->
+<!--                    <td>{{ network.id|e }}</td>-->
+<!--                    <td>{{ network.name|e }}</td>-->
+<!--                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>-->
+<!--                    <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>-->
+<!--                    <td>{% if network.group_id %}{{ network.group_id|e }}{% else %}N/A{% endif %}</td>-->
+<!--                    <td>-->
+<!--                        {% if network.members is empty %}-->
+<!--                            N/A-->
+<!--                        {% else %}-->
+<!--                            <ul>-->
+<!--                            {% for member in network.members %}-->
+<!--                                <li>{{ member|e }}</li>-->
+<!--                            {% endfor %}-->
+<!--                            </ul>-->
+<!--                        {% endif %}-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            {% endfor %}-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>-->
 
     <h3>New Network</h3>
     <p>
@@ -101,8 +99,8 @@ portal will automatically be added to the network.
             <input type="text" name="name" id="inputName" maxlength="10" placeholder="{% trans 'Name' %}" required pattern="[a-zA-Z0-9-_.@]+">
             <label for="groupId">{% trans "Group" %}</label>
             <select id="groupId" name="groupId">
-                {% for group in groupList %}
-                    <option value="{{ group.id|e }}">{{ group.name|e }}</option>
+                {% for group in userGroups %}
+                    <option value="{{ group.id|e }}">{{ group.displayName|e }}</option>
                 {% endfor %}
             </select>
         </fieldset>
