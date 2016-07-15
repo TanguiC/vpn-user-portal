@@ -306,28 +306,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
                 $networkId = $this->vpnServerApiClient->addZeroTierNetwork($u->getUserId(), $networkName, $groupId);
 
-                // add all identifiers from this user
-                // XXX will go away as a crontab will take care of this I guess
-                $clientIdentifiers = $this->vpnServerApiClient->getZeroTierClients($u->getUserId());
-                foreach($clientIdentifiers as $clientId) {
-                    $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);
-                }
-
-                return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/zerotier/member',
-            function (Request $request, UserInfoInterface $u) {
-                // XXX validate
-                $networkId = $request->getPostParameter('network_id');
-                // XXX make sure the network_id is owned by the user!
-                $clientId = $request->getPostParameter('client_id');
-
-                $this->vpnServerApiClient->addZeroTierNetworkMember($networkId, $clientId);
-
                 return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
             },
             $userAuth
