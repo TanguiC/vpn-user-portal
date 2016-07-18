@@ -277,17 +277,24 @@ class VpnPortalModule implements ServiceModuleInterface
             '/zerotier',
             function (Request $request, UserInfoInterface $u) {
                 $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
+                $guestNetworks = $this->vpnServerApiClient->getZeroTierGuestNetworks($u->getUserId());
                 $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
 
                 // add group_id to group_name
-                for($i = 0; $i < count($networks) ; $i++) {
+                for ($i = 0; $i < count($networks); ++$i) {
                     $networks[$i]['group_name'] = self::idToName($userGroups, $networks[$i]['group_id']);
+                }
+
+                // add group_id to group_name
+                for ($i = 0; $i < count($guestNetworks); ++$i) {
+                    $guestNetworks[$i]['group_name'] = self::idToName($userGroups, $guestNetworks[$i]['group_id']);
                 }
 
                 return $this->templateManager->render(
                     'vpnPortalZeroTier',
                     [
                         'networks' => $networks,
+                        'guestNetworks' => $guestNetworks,
                         'userGroups' => $userGroups,
                     ]
                 );
@@ -491,8 +498,8 @@ class VpnPortalModule implements ServiceModuleInterface
 
     private static function idToName(array $userGroups, $groupId)
     {
-        foreach($userGroups as $userGroup) {
-            if($userGroup['id'] === $groupId) {
+        foreach ($userGroups as $userGroup) {
+            if ($userGroup['id'] === $groupId) {
                 return $userGroup['displayName'];
             }
         }
