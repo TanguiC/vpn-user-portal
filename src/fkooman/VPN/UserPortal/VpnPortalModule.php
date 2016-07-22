@@ -84,7 +84,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $service->get(
             '/',
             function (Request $request) {
-                return new RedirectResponse($request->getUrl()->getRootUrl().'home', 302);
+                return new RedirectResponse($request->getUrl()->getRootUrl().'zerotier', 302);
             },
             $noAuth
         );

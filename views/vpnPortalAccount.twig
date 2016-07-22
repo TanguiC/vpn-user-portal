@@ -6,29 +6,13 @@
     {% include 'header.twig' %}
 
     <ul class="mainMenu">
-      <li><a href="home">{% trans "Home" %}</a></li>
-      <li><a href="new">{% trans "New" %}</a></li>
-      <li><a href="configurations">{% trans "Configurations" %}</a></li>
       <li><a href="zerotier">{% trans "ZeroTier" %}</a></li>
       <li class="active"><a href="account">{% trans "Account" %}</a></li>
-      <li><a href="documentation">{% trans "Documentation" %}</a></li>
     </ul>
 
     <h2>{% trans "Account" %}</h2>
 
     <dl>
-        <dt>{% trans "User ID" %}</dt>
-        <dd><code>{{ userId|e }}</code></dd>
-
-        <dt>{% trans "Two-factor Authentication" %}</dt>
-        <dd>
-            {% if otpEnabled %}
-                {% trans "Enrolled" %}
-            {% else %}
-                <a href="otp">{% trans "Enroll" %}</a>
-            {% endif %}
-        </dd>
-
         {% if userGroups is not empty %}
             <dt>{% trans "Group Membership(s)" %}</dt>
             <dd>
@@ -41,37 +25,10 @@
         {% endif %}
     </dl>
 
-    {% if userTokens is not empty %}
-    <h3>{% trans "Applications" %}</h3>
-        <p>
-            {% trans "Some external applications can manage your account. You can revoke their permission." %}
-        </p>
-
-        <table>
-            <thead>
-                <tr><th>Application</th><th></th></tr>
-            </thead>
-            <tbody>
-                {% for token in userTokens %}
-                    <tr>
-                        <td>{{ token.client_id|e }}</td>
-                        <td class="text-right">
-                            <form method="post" action="deleteTokens">
-                                <input type="hidden" name="client_id" value="{{ token.client_id|e }}">
-                                <button class="warning" type="submit">{% trans "Revoke" %}</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
     <h3>ZeroTier</h3>
-    <p>
-        Here you can set your <a href="https://zerotier.com/">ZeroTier</a> 
-        client identifier(s). It will be automatically added to networks you create 
-        and used when joining networks you are invited to.
+    <p class="plain">
+        Add your <a href="https://zerotier.com/">ZeroTier</a> client 
+        identifier(s) here.
     </p>
 
     {% if zeroTierClients is not empty %}
