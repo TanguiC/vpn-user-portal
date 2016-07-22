@@ -13,8 +13,8 @@
     <h2>{% trans "Account" %}</h2>
 
     <dl>
+        <dt>{% trans "Group Membership(s)" %}</dt>
         {% if userGroups is not empty %}
-            <dt>{% trans "Group Membership(s)" %}</dt>
             <dd>
                 <ul>
                     {% for group in userGroups %}
@@ -22,6 +22,8 @@
                     {% endfor %}
                 </ul>
             </dd>
+        {% else %}
+            <dd><a href="{{ rootFolder|e }}_voot/authorize">Retrieve Group Membership(s)</a></dd>
         {% endif %}
     </dl>
 
