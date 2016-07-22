@@ -24,7 +24,7 @@ h1, h2, h3, h4 {
 }
 
 a {
-    color: #257;
+    color: #c00;
 }
 
 p {
@@ -136,7 +136,7 @@ ul.mainMenu li a {
 }
 
 ul.mainMenu li.active a {
-    background-color: #37b;
+    background-color: #c00;
 }
 
 ul.mainMenu li:hover a {
@@ -144,7 +144,7 @@ ul.mainMenu li:hover a {
 }
 
 ul.mainMenu li.active:hover a {
-    background-color: #26a;
+    background-color: #b00;
 }
 
 ul.mainMenu li.active a {
