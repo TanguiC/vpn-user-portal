@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace fkooman\VPN\UserPortal;
 
 use fkooman\Http\Exception\BadRequestException;
@@ -274,6 +273,21 @@ class VpnPortalModule implements ServiceModuleInterface
         );
 
         $service->get(
+            '/attributes',
+            function (Request $request, UserInfoInterface $u) {
+                $output = '';
+                foreach ($_SERVER as $key => $value) {
+                    if (substr($key, 0, 7) == 'MELLON_') {
+                        $output .= $key.' = '.$value.'<br>';
+                    }
+                }
+
+                return $output;
+            },
+            $userAuth
+        );
+
+        $service->get(
             '/zerotier',
             function (Request $request, UserInfoInterface $u) {
                 $networks = $this->vpnServerApiClient->getZeroTierNetworks($u->getUserId());
@@ -298,7 +312,6 @@ class VpnPortalModule implements ServiceModuleInterface
                         'userGroups' => $userGroups,
                     ]
                 );
-
             },
             $userAuth
         );
