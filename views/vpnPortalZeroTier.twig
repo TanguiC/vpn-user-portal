@@ -23,15 +23,14 @@ networks you have access to. You can then join them.
     <p>Overview of networks you created. Members will be automatically added based on group membership.</p>
     <table>
         <thead>
-            <tr><th>ID</th><th>Name</th><th>Start IP</th><th>End IP</th><th>Group</th><th>Members</th></tr>
+            <tr><th>ID</th><th>Name</th><th>IP</th><th>Group</th><th>Client IDs</th></tr>
         </thead>
         <tbody>
             {% for network in networks %}
                 <tr>
                     <td>{{ network.id|e }}</td>
                     <td>{{ network.name|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeEnd|e }}</td>
+                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td>
                     <td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td>
                     <td>
                         {% if network.members is empty %}
