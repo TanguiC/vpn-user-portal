@@ -43,7 +43,7 @@ use GuzzleHttp\Client;
 use fkooman\OAuth\Auth\UnauthenticatedClientAuthentication;
 use fkooman\OAuth\Client\OAuth2Client;
 use fkooman\OAuth\Client\Provider;
-use fkooman\OAuth\Client\GuzzleHttpClient;
+use fkooman\OAuth\Client\CurlHttpClient;
 use fkooman\VPN\UserPortal\VootModule;
 
 try {
@@ -177,7 +177,7 @@ try {
                 $config->v('Voot', 'authorizationEndpoint'),
                 $config->v('Voot', 'tokenEndpoint')
             ),
-            new GuzzleHttpClient()
+            new CurlHttpClient()
         );
         $vootModule = new VootModule(
             $oauthClient,
@@ -208,7 +208,7 @@ try {
     $service->getPluginRegistry()->registerDefaultPlugin($authenticationPlugin);
     $response = $service->run($request);
     $response->setHeader('Content-Security-Policy', "default-src 'self'");
-    # X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+    // X-Frame-Options: https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
     $response->setHeader('X-Frame-Options', 'DENY');
     $response->setHeader('X-Content-Type-Options', 'nosniff');
     $response->setHeader('X-Xss-Protection', '1; mode=block');
