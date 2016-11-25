@@ -20,59 +20,62 @@ networks you have access to. You can then join them.
 
     <h1>My Networks</h1>
     <p>Overview of networks you created. Members will be automatically added based on team membership.</p>
-    {% for network in networks %}
-    <h2>{{ network.name|e }}</h2>
-    <table>
-        <tr><th>ID</th><td> {{ network.id|e }}</td></tr>
-<!--        <tr><th>Name</th><td> {{ network.name|e }}</td></tr> -->
-        <tr><th>IP Range</th><td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td></tr>
-        <tr><th>Team</th><td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td></tr>
-        <tr><th>Members</th>
-            <td>
-                {% if network.members is empty %}
-                    <em>N/A</em>
-                {% else %}
-                    <ul class="simple">
-                    {% for member in network.members %}
-                        <li>{{ member.clientId|e }} ({{ member.userId|e }})</li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
-    {% endfor %}
+    {% if networks is empty %}
+        <p class="plain">You did not yet create any networks. Create one below!</p>
+    {% else %}
+        {% for network in networks %}
+        <h2>{{ network.name|e }}</h2>
+        <table>
+            <tr><th>ID</th><td> {{ network.id|e }}</td></tr>
+        <!--        <tr><th>Name</th><td> {{ network.name|e }}</td></tr> -->
+            <tr><th>IP Range</th><td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td></tr>
+            <tr><th>Team</th><td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td></tr>
+            <tr><th>Members</th>
+                <td>
+                    {% if network.members is empty %}
+                        <em>N/A</em>
+                    {% else %}
+                        <ul class="simple">
+                        {% for member in network.members %}
+                            <li>{{ member.clientId|e }} ({{ member.userId|e }})</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+    {% endif %}
 
     <h1>Other Networks</h1>
     <p>Overview of networks created by others you have access to.</p>
-    <table>
-        <thead>
-            <tr><th>Network ID</th><th>Network Name</th><th>IP range</th><th>Team</th><th>Authorized Client IDs</th><th>Network Owner</th></tr>
-        </thead>
-        <tbody>
-            {% for network in guestNetworks %}
-                <tr>
-                    <td>{{ network.id|e }}</td>
-                    <td>{{ network.name|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td>
-                    <td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td>
-                    <td>
-                        {% if network.members is empty %}
-                            N/A
-                        {% else %}
-                            <ul>
-                            {% for member in network.members %}
-                                <li>{{ member|e }}</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </td>
-                    <td>{{ network.user_id|e }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
+    {% if guestNetworks is empty %}
+        <p class="plain">You do not have access to any other networks yet. Ask a network owner to invite you!</p>
+    {% else %}
+        {% for network in guestNetworks %}
+        <h2>{{ network.name|e }}</h2>
+        <table>
+            <tr><th>ID</th><td>{{ network.id|e }}</td></tr>
+            <tr><th>Owner</th><td>{{ network.user_id|e }}</td></tr>
+            <tr><th>IP Range</th><td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td></tr>
+            <tr><th>Team</th><td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td></tr>
+            <tr><th>Members</th>
+                <td>
+                    {% if network.members is empty %}
+                        <em>N/A</em>
+                    {% else %}
+                        <ul class="simple">
+                        {% for member in network.members %}
+                            <li>{{ member|e }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+    {% endif %}
 
     <h1>New Network</h1>
     <p>
