@@ -34,9 +34,7 @@ use fkooman\Rest\Plugin\Authentication\Mellon\MellonAuthentication;
 use fkooman\Rest\Service;
 use fkooman\Tpl\Twig\TwigTemplateManager;
 use fkooman\VPN\UserPortal\DbTokenValidator;
-use fkooman\VPN\UserPortal\VpnApiModule;
 use fkooman\VPN\UserPortal\UserTokens;
-use fkooman\VPN\UserPortal\VpnConfigApiClient;
 use fkooman\VPN\UserPortal\VpnPortalModule;
 use fkooman\VPN\UserPortal\VpnServerApiClient;
 use GuzzleHttp\Client;
@@ -111,18 +109,6 @@ try {
             throw new RuntimeException('unsupported authentication mechanism');
     }
 
-    // vpn-ca-api
-    $vpnConfigApiClient = new VpnConfigApiClient(
-        new Client([
-            'defaults' => [
-                'headers' => [
-                    'Authorization' => sprintf('Bearer %s', $config->v('remoteApi', 'vpn-ca-api', 'token')),
-                ],
-            ],
-        ]),
-        $config->v('remoteApi', 'vpn-ca-api', 'uri')
-    );
-
     // vpn-server-api
     $vpnServerApiClient = new VpnServerApiClient(
         new Client([
@@ -143,15 +129,9 @@ try {
 
     $vpnPortalModule = new VpnPortalModule(
         $templateManager,
-        $vpnConfigApiClient,
         $vpnServerApiClient,
         new UserTokens($db),
         $session
-    );
-
-    $vpnApiModule = new VpnApiModule(
-        $vpnConfigApiClient,
-        $vpnServerApiClient
     );
 
     $oauthModule = new OAuthModule(
@@ -195,7 +175,6 @@ try {
 
     $service = new Service();
     $service->addModule($vpnPortalModule);
-    $service->addModule($vpnApiModule);
     $service->addModule($oauthModule);
     if ($enableVoot) {
         $service->addModule($vootModule);

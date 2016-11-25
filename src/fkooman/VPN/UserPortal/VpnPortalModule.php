@@ -36,9 +36,6 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\Tpl\TemplateManagerInterface */
     private $templateManager;
 
-    /** @var VpnConfigApiClient */
-    private $vpnConfigApiClient;
-
     /** @var VpnServerApiClient */
     private $vpnServerApiClient;
 
@@ -48,10 +45,9 @@ class VpnPortalModule implements ServiceModuleInterface
     /** @var \fkooman\Http\Session */
     private $session;
 
-    public function __construct(TemplateManagerInterface $templateManager, VpnConfigApiClient $vpnConfigApiClient, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
+    public function __construct(TemplateManagerInterface $templateManager, VpnServerApiClient $vpnServerApiClient, UserTokens $userTokens, Session $session)
     {
         $this->templateManager = $templateManager;
-        $this->vpnConfigApiClient = $vpnConfigApiClient;
         $this->vpnServerApiClient = $vpnServerApiClient;
         $this->userTokens = $userTokens;
         $this->session = $session;
@@ -90,127 +86,6 @@ class VpnPortalModule implements ServiceModuleInterface
 
         /* PAGES */
         $service->get(
-            '/home',
-            function (Request $request, UserInfoInterface $u) {
-                return $this->templateManager->render(
-                    'vpnPortalHome',
-                    array(
-                    )
-                );
-            },
-            $userAuth
-        );
-
-        $service->get(
-            '/new',
-            function (Request $request, UserInfoInterface $u) {
-                $serverPools = $this->vpnServerApiClient->getServerPools();
-                $userGroups = $this->vpnServerApiClient->getUserGroups($u->getUserId());
-
-                $poolList = [];
-                foreach ($serverPools as $pool) {
-                    if ($pool['enableAcl']) {
-                        // ACL enabled
-                        if (!in_array($pool['id'], $userGroups)) {
-                            continue;
-                        }
-                    }
-                    $poolList[] = ['id' => $pool['id'], 'name' => $pool['name'], 'twoFactor' => $pool['twoFactor']];
-                }
-
-                return $this->templateManager->render(
-                    'vpnPortalNew',
-                    array(
-                        'poolList' => $poolList,
-                        'cnLength' => 63 - strlen($u->getUserId()),
-                    )
-                );
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/new',
-            function (Request $request, UserInfoInterface $u) {
-                $configName = $request->getPostParameter('name');
-                $poolId = $request->getPostParameter('poolId');
-
-                return $this->getConfig($request, $u->getUserId(), $configName, $poolId);
-            },
-            $userAuth
-        );
-
-        $service->get(
-            '/configurations',
-            function (Request $request, UserInfoInterface $u) {
-                $certList = $this->vpnConfigApiClient->getCertList($u->getUserId());
-                $disabledCommonNames = $this->vpnServerApiClient->getDisabledCommonNames();
-
-                $activeVpnConfigurations = array();
-                $revokedVpnConfigurations = array();
-                $disabledVpnConfigurations = array();
-                $expiredVpnConfigurations = array();
-
-                foreach ($certList['items'] as $c) {
-                    if ('E' === $c['state']) {
-                        $expiredVpnConfigurations[] = $c;
-                    } elseif ('R' === $c['state']) {
-                        $revokedVpnConfigurations[] = $c;
-                    } elseif ('V' === $c['state']) {
-                        $commonName = $u->getUserId().'_'.$c['name'];
-                        $c['disable'] = false;
-                        if (in_array($commonName, $disabledCommonNames)) {
-                            $c['disable'] = true;
-                        }
-
-                        if ($c['disable']) {
-                            $disabledVpnConfigurations[] = $c;
-                        } else {
-                            $activeVpnConfigurations[] = $c;
-                        }
-                    }
-                }
-
-                return $this->templateManager->render(
-                    'vpnPortalConfigurations',
-                    array(
-                        'activeVpnConfigurations' => $activeVpnConfigurations,
-                        'disabledVpnConfigurations' => $disabledVpnConfigurations,
-                        'revokedVpnConfigurations' => $revokedVpnConfigurations,
-                        'expiredVpnConfigurations' => $expiredVpnConfigurations,
-                    )
-                );
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/disable',
-            function (Request $request, UserInfoInterface $u) {
-                $configName = $request->getPostParameter('name');
-                $formConfirm = $request->getPostParameter('confirm');
-
-                if (is_null($formConfirm)) {
-                    // ask for confirmation
-                    return $this->templateManager->render(
-                        'vpnPortalConfirmDisable',
-                        array(
-                            'configName' => $configName,
-                        )
-                    );
-                }
-
-                if ('yes' === $formConfirm) {
-                    // user said yes
-                    $this->disableConfig($u->getUserId(), $configName);
-                }
-
-                return new RedirectResponse($request->getUrl()->getRootUrl().'configurations', 302);
-            },
-            $userAuth
-        );
-
-        $service->get(
             '/account',
             function (Request $request, UserInfoInterface $u) {
                 $otpSecret = $this->vpnServerApiClient->getOtpSecret($u->getUserId());
@@ -232,40 +107,6 @@ class VpnPortalModule implements ServiceModuleInterface
                         'userTokens' => $this->userTokens->getUserAccessTokens($u->getUserId()),
                         'userGroups' => $userGroups,
                         'zeroTierClients' => $this->vpnServerApiClient->getZeroTierClients($u->getUserId()),
-                    )
-                );
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/setLanguage',
-            function (Request $request) {
-                $requestLang = $request->getPostParameter('language');
-                Utils::validateLanguage($requestLang);
-                $this->session->set('activeLanguage', $requestLang);
-                // redirect
-                return new RedirectResponse($request->getPostParameter('redirect_to'));
-            },
-            $noAuth
-        );
-
-        $service->post(
-            '/deleteTokens',
-            function (Request $request, UserInfoInterface $u) {
-                $this->userTokens->deleteUserAccessTokens($u->getUserId(), $request->getPostParameter('client_id'));
-
-                return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
-            },
-            $userAuth
-        );
-
-        $service->get(
-            '/documentation',
-            function (Request $request, UserInfoInterface $u) {
-                return $this->templateManager->render(
-                    'vpnPortalDocumentation',
-                    array(
                     )
                 );
             },
@@ -340,82 +181,6 @@ class VpnPortalModule implements ServiceModuleInterface
                 $this->vpnServerApiClient->registerZeroTierClient($u->getUserId(), $clientId);
 
                 return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
-            },
-            $userAuth
-        );
-
-        $service->get(
-            '/otp',
-            function (Request $request, UserInfoInterface $u) {
-                $otpSecret = GoogleAuthenticator::generateRandom();
-
-                return $this->templateManager->render(
-                    'vpnPortalOtp',
-                    array(
-                        'secret' => $otpSecret,
-                    )
-                );
-            },
-            $userAuth
-        );
-
-        $service->post(
-            '/otp',
-            function (Request $request, UserInfoInterface $u) {
-                $otpSecret = $request->getPostParameter('otp_secret');
-                self::validateOtpSecret($otpSecret);
-                $otpKey = $request->getPostParameter('otp_key');
-                self::validateOtpKey($otpKey);
-
-                $otp = new Otp();
-                if ($otp->checkTotp(Base32::decode($otpSecret), $otpKey)) {
-                    // we do not keep log of the used keys here
-                    // XXX is that acceptable?
-
-                    // store the secret in the vpn-server-api instance
-                    $this->vpnServerApiClient->setOtpSecret($u->getUserId(), $otpSecret);
-
-                    return new RedirectResponse($request->getUrl()->getRootUrl().'account', 302);
-                }
-
-                return $this->templateManager->render(
-                    'vpnPortalErrorOtpEnroll',
-                    []
-                );
-            },
-            $userAuth
-        );
-
-        $service->get(
-            '/otp-qr-code',
-            function (Request $request, UserInfoInterface $u) {
-                $otpSecret = $request->getUrl()->getQueryParameter('otp_secret');
-                self::validateOtpSecret($otpSecret);
-
-                $httpHost = $request->getUrl()->getHost();
-                if (false !== strpos($httpHost, ':')) {
-                    // strip port
-                    $httpHost = substr($httpHost, 0, strpos($httpHost, ':'));
-                }
-
-                $otpAuthUrl = sprintf(
-                    'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                    $httpHost,
-                    $u->getUserId(),
-                    $otpSecret,
-                    $httpHost
-                );
-
-                $renderer = new Png();
-                $renderer->setHeight(256);
-                $renderer->setWidth(256);
-                $writer = new Writer($renderer);
-                $qrCode = $writer->writeString($otpAuthUrl);
-
-                $response = new Response(200, 'image/png');
-                $response->setBody($qrCode);
-
-                return $response;
             },
             $userAuth
         );
