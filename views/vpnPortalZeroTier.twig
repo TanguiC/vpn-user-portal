@@ -16,10 +16,10 @@ able to actually connect to them set your client identifier(s) on the
 <a href="account">Account</a> page so they will be automatically added to the 
 networks you have access to. You can then join them.
     </p>
+    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or with the GUI.</p>
 
     <h1>My Networks</h1>
     <p>Overview of networks you created. Members will be automatically added based on group membership.</p>
-    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
     {% for network in networks %}
     <h2>{{ network.name|e }}</h2>
     <table>
@@ -45,7 +45,6 @@ networks you have access to. You can then join them.
 
     <h1>Other Networks</h1>
     <p>Overview of networks created by others you have access to.</p>
-    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
     <table>
         <thead>
             <tr><th>Network ID</th><th>Network Name</th><th>IP range</th><th>Authorized Group</th><th>Authorized Client IDs</th><th>Network Owner</th></tr>

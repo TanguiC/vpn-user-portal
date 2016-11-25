@@ -10,24 +10,20 @@
       <li class="active"><a href="account">{% trans "Account" %}</a></li>
     </ul>
 
-    <h2>{% trans "Account" %}</h2>
+    <h1>Group Membership(s)</h1>
 
-    <dl>
-        <dt>{% trans "Group Membership(s)" %}</dt>
-        {% if userGroups is not empty %}
-            <dd>
-                <ul>
-                    {% for group in userGroups %}
-                        <li title="{{ group.id|e }}">{{ group.displayName|e }}</li>
-                    {% endfor %}
-                </ul>
-            </dd>
-        {% else %}
-            <dd><a href="{{ rootFolder|e }}_voot/authorize">Retrieve Group Membership(s)</a></dd>
-        {% endif %}
-    </dl>
+    {% if userGroups is not empty %}
+        <ul>
+            {% for group in userGroups %}
+                <li title="{{ group.id|e }}">{{ group.displayName|e }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p><a href="{{ rootFolder|e }}_voot/authorize">Retrieve Group Membership(s)</a></p>
+    {% endif %}
 
-    <h3>ZeroTier</h3>
+    <h1>ZeroTier</h1>
+    
     <p class="plain">
         Add your <a href="https://zerotier.com/">ZeroTier</a> client 
         identifier(s) here.
@@ -47,7 +43,7 @@
             <legend>{% trans "Client ID" %}</legend>
             <label for="client_id">{% trans "Client ID" %}</label>
             <input type="text" name="client_id" id="client_id" maxlength="10" placeholder="{% trans 'Client ID' %}" required pattern="[a-fA-F0-9]{10}">
-            <button type="submit">{% trans "Set" %}</button>
+            <button type="submit">{% trans "Add" %}</button>
         </fieldset>
     </form>
 
