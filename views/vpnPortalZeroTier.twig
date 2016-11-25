@@ -10,8 +10,6 @@
       <li><a href="account">{% trans "Account" %}</a></li>
     </ul>
 
-    <h2>{% trans "ZeroTier" %}</h2>
-
     <p>
 Below you will be able to create and see networks you are a member of. To be 
 able to actually connect to them set your client identifier(s) on the 
@@ -19,38 +17,35 @@ able to actually connect to them set your client identifier(s) on the
 networks you have access to. You can then join them.
     </p>
 
-    <h3>My Networks</h3>
+    <h1>My Networks</h1>
     <p>Overview of networks you created. Members will be automatically added based on group membership.</p>
-    <table>
-        <thead>
-            <tr><th>Network ID</th><th>Network Name</th><th>IP range</th><th>Authorized Group</th><th>Authorized Client IDs</th></tr>
-        </thead>
-        <tbody>
-            {% for network in networks %}
-                <tr>
-                    <td>{{ network.id|e }}</td>
-                    <td>{{ network.name|e }}</td>
-                    <td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td>
-                    <td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td>
-                    <td>
-                        {% if network.members is empty %}
-                            N/A
-                        {% else %}
-                            <ul>
-                            {% for member in network.members %}
-                                <li>{{ member.clientId|e }} ({{ member.userId|e }})</li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
     <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
+    {% for network in networks %}
+    <h2>{{ network.name|e }}</h2>
+    <table>
+        <tr><th>Network ID</th><td> {{ network.id|e }}</td></tr>
+<!--        <tr><th>Name</th><td> {{ network.name|e }}</td></tr> -->
+        <tr><th>IP Range</th><td>{{ network.ipAssignmentPools[0].ipRangeStart|e }}/24</td></tr>
+        <tr><th>Authorized Group</th><td><span title="{{ network.group_id }}">{{ network.group_name|e }}</span></td></tr>
+        <tr><th>Members</th>
+            <td>
+                {% if network.members is empty %}
+                    <em>N/A</em>
+                {% else %}
+                    <ul class="simple">
+                    {% for member in network.members %}
+                        <li>{{ member.clientId|e }} ({{ member.userId|e }})</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    {% endfor %}
 
-    <h3>Other Networks</h3>
-    <p>Overview of networks created by others you have access to. </p>
+    <h1>Other Networks</h1>
+    <p>Overview of networks created by others you have access to.</p>
+    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
     <table>
         <thead>
             <tr><th>Network ID</th><th>Network Name</th><th>IP range</th><th>Authorized Group</th><th>Authorized Client IDs</th><th>Network Owner</th></tr>
@@ -78,9 +73,9 @@ networks you have access to. You can then join them.
             {% endfor %}
         </tbody>
     </table>
-    <p>Join a network using <code>zerotier-cli join &lt;ID&gt;</code> or use the GUI.</p>
 
-    <h3>New Network</h3>
+
+    <h1>New Network</h1>
     <p>
 Create a new network. Choose a group you want to share this network with. 
 People who are a member of this group and registered their client in this 
@@ -106,7 +101,7 @@ portal will automatically be added to the network.
     </form>
 
 <!-- 
-    <h3>Manually Add Client</h3>
+    <h1>Manually Add Client</h1>
     <p>Add a client to a particular network. Use this if they can't be automatically added based on group memberships.</p>
 
     <form method="post" action="zerotier/member">

@@ -89,6 +89,11 @@ dl ul {
     padding: 0 1em;
 }
 
+ul.simple {
+    padding: 0 1em;
+    margin: 0;
+}
+
 /** IP LIST **/
 ul.ipList {
     margin: 0;
