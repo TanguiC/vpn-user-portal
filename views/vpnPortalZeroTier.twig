@@ -38,7 +38,7 @@ networks you have access to. You can then join them.
                         {% else %}
                             <ul>
                             {% for member in network.members %}
-                                <li>{{ member|e }}</li>
+                                <li>{{ member.clientId|e }} ({{ member.userId|e }})</li>
                             {% endfor %}
                             </ul>
                         {% endif %}
