@@ -10,6 +10,9 @@
       <li class="active"><a href="account">{% trans "Account" %}</a></li>
     </ul>
 
+    <h1>User ID</h1>
+    <p>{{ userId|e }}</p>
+
     <h1>Group Membership(s)</h1>
 
     {% if userGroups is not empty %}
