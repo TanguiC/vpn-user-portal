@@ -307,7 +307,7 @@ class VpnPortalModule implements ServiceModuleInterface
         $profileData = $serverProfiles[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->get('server_info', ['profile_id' => $profileId]);
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
 

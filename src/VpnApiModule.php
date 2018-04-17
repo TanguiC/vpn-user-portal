@@ -346,7 +346,7 @@ class VpnApiModule implements ServiceModuleInterface
         // create a certificate
         $clientCertificate = $this->getCertificate($userId, $displayName);
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->get('server_info', ['profile_id' => $profileId]);
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, $clientCertificate, $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);
@@ -370,7 +370,7 @@ class VpnApiModule implements ServiceModuleInterface
         $profileData = $profileList[$profileId];
 
         // get the CA & tls-auth
-        $serverInfo = $this->serverClient->get('server_info');
+        $serverInfo = $this->serverClient->get('server_info', ['profile_id' => $profileId]);
 
         $clientConfig = ClientConfig::get($profileData, $serverInfo, [], $this->shuffleHosts);
         $clientConfig = str_replace("\n", "\r\n", $clientConfig);

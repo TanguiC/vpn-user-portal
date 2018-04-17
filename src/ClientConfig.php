@@ -58,9 +58,11 @@ class ClientConfig
             'tls-version-min 1.2',
             'tls-cipher TLS-ECDHE-RSA-WITH-AES-256-GCM-SHA384',
 
-            '<ca>',
-            trim($serverInfo['ca']),
-            '</ca>',
+            //'<ca>',
+            //trim($serverInfo['ca']),
+            //'</ca>',
+            'ca none',
+            sprintf('verify-hash SHA256 %s', $serverInfo['fingerprint']),
         ];
 
         // API 1, if clientCertificate is provided, we add it directly to the
