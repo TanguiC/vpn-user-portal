@@ -62,7 +62,7 @@ class ClientConfig
             //trim($serverInfo['ca']),
             //'</ca>',
             'ca none',
-            sprintf('verify-hash SHA256 %s', $serverInfo['fingerprint']),
+            sprintf('verify-hash %s SHA256', $serverInfo['fingerprint']),
         ];
 
         // API 1, if clientCertificate is provided, we add it directly to the
