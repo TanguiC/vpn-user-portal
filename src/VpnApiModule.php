@@ -143,6 +143,36 @@ class VpnApiModule implements ServiceModuleInterface
             }
         );
 
+        $service->post(
+            '/add_client_certificate_fingerprint',
+            /**
+             * @return ApiResponse
+             */
+            function (Request $request, array $hookData) {
+                $userInfo = $hookData['auth'];
+
+                try {
+                    $displayName = InputValidation::displayName($request->getPostParameter('display_name'));
+                    $certFingerprint = InputValidation::certFingerprint($request->getPostParameter('fingerprint'));
+
+                    $this->serverClient->post(
+                        'add_client_certificate_fingerprint',
+                        [
+                            'user_id' => $userInfo->id(),
+                            'display_name' => $displayName,
+                            'fingerprint' => $certFingerprint,
+                        ]
+                    );
+
+                    return new ApiResponse(
+                        'add_client_certificate_fingerprint'
+                    );
+                } catch (InputValidationException $e) {
+                    return new ApiErrorResponse('create_keypair', $e->getMessage());
+                }
+            }
+        );
+
         // API 2
         $service->get(
             '/check_certificate',
