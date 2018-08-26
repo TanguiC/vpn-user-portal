@@ -55,6 +55,10 @@ class LastAuthenticatedAtPingHook implements BeforeHookInterface
             return false;
         }
 
+        if ('GET' === $request->getRequestMethod() && '/_openid/callback' === $request->getPathInfo()) {
+            return false;
+        }
+
         if (!array_key_exists('auth', $hookData)) {
             throw new HttpException('authentication hook did not run before', 500);
         }

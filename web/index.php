@@ -10,9 +10,13 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
+use fkooman\Jwt\Keys\PublicKey;
+use fkooman\Jwt\RS256;
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
+use fkooman\OAuth\Client\OpenIdClient;
 use fkooman\OAuth\Client\Provider;
+use fkooman\OAuth\Client\SessionTokenStorage;
 use fkooman\OAuth\Server\OAuthServer;
 use fkooman\OAuth\Server\SodiumSigner;
 use fkooman\OAuth\Server\Storage;
@@ -28,6 +32,7 @@ use SURFnet\VPN\Common\Http\HtmlResponse;
 use SURFnet\VPN\Common\Http\LanguageSwitcherHook;
 use SURFnet\VPN\Common\Http\LdapAuth;
 use SURFnet\VPN\Common\Http\MellonAuthenticationHook;
+use SURFnet\VPN\Common\Http\OpenIdAuthenticationHook;
 use SURFnet\VPN\Common\Http\PdoAuth;
 use SURFnet\VPN\Common\Http\RadiusAuth;
 use SURFnet\VPN\Common\Http\Request;
@@ -150,6 +155,25 @@ try {
                 )
             );
 
+            break;
+        case 'OpenIdAuthentication':
+            $openIdAuthenicationHook = new OpenIdAuthenticationHook(
+                $session,
+                new Provider(
+                    $config->getSection('OpenIdAuthentication')->getItem('clientId'),
+                    $config->getSection('OpenIdAuthentication')->getItem('clientSecret'),
+                    $config->getSection('OpenIdAuthentication')->getItem('authorizeUri'),
+                    $config->getSection('OpenIdAuthentication')->getItem('tokenUri')
+                ),
+                new OpenIdClient(
+                    new SessionTokenStorage(),
+                    new OAuthCurlHttpClient(['allowHttp' => true]),
+                    new RS256(new PublicKey($config->getSection('OpenIdAuthentication')->getItem('publicKey')))
+                )
+            );
+
+            $service->addBeforeHook('auth', $openIdAuthenicationHook);
+            $service->addModule($openIdAuthenicationHook);
             break;
         case 'FormLdapAuthentication':
             $tpl->addDefault(['_show_logout' => true]);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12c55ea02ad8a897a47d9e12dbfe76f1",
+    "content-hash": "f9b7ae26f6576e9248a1b09624f9a352",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -54,16 +54,16 @@
         },
         {
             "name": "eduvpn/common",
-            "version": "dev-master",
+            "version": "dev-oidc",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "7bc2412f1814bb0c9524e99998a29310c744f771"
+                "reference": "f02024d3bd14808ee09809c59341422548c56ddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/7bc2412f1814bb0c9524e99998a29310c744f771",
-                "reference": "7bc2412f1814bb0c9524e99998a29310c744f771",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f02024d3bd14808ee09809c59341422548c56ddf",
+                "reference": "f02024d3bd14808ee09809c59341422548c56ddf",
                 "shasum": ""
             },
             "require": {
@@ -79,6 +79,8 @@
                 "ext-pdo": "*",
                 "ext-radius": "*",
                 "ext-spl": "*",
+                "fkooman/jwt": "dev-master",
+                "fkooman/oauth2-client": "dev-oidc",
                 "fkooman/secookie": "^2",
                 "ircmaxell/password-compat": "^1",
                 "paragonie/constant_time_encoding": "^1|^2",
@@ -113,15 +115,63 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-08-17T08:31:37+00:00"
+            "time": "2018-08-26T09:22:01+00:00"
+        },
+        {
+            "name": "fkooman/jwt",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://git.tuxed.net/fkooman/php-jwt",
+                "reference": "60a393dbd7af4505cf3a90e2391aa9a2febebdbb"
+            },
+            "require": {
+                "ext-hash": "*",
+                "ext-json": "*",
+                "ext-openssl": "*",
+                "ext-spl": "*",
+                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/random_compat": ">=1",
+                "php": ">= 5.4",
+                "symfony/polyfill-php56": "^1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4|^5|^6|^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "fkooman\\Jwt\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "fkooman\\Jwt\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "email": "fkooman@tuxed.net",
+                    "name": "François Kooman"
+                }
+            ],
+            "description": "Simple and Secure JWT Signer/Verifier",
+            "support": {
+                "email": "fkooman@tuxed.net",
+                "source": "https://git.tuxed.net/fkooman/php-jwt"
+            },
+            "time": "2018-08-24T10:45:13+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
-            "version": "7.1.3",
+            "version": "dev-oidc",
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-client",
-                "reference": "3d96587ed78b1ecd72085847cae779b6edeb4526"
+                "reference": "ace54270dbe90a6abe9150cdac10dbb0ef0c1ed5"
             },
             "require": {
                 "ext-curl": "*",
@@ -132,14 +182,15 @@
                 "ext-pdo": "*",
                 "ext-session": "*",
                 "ext-spl": "*",
+                "fkooman/jwt": "dev-master",
                 "paragonie/constant_time_encoding": "^1|^2",
-                "paragonie/random_compat": "^1|^2",
+                "paragonie/random_compat": ">=1",
                 "php": ">=5.4",
                 "psr/log": "^1.0",
                 "symfony/polyfill-php56": "^1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35|^5|^6"
+                "phpunit/phpunit": "^4.8.35|^5|^6|^7"
             },
             "type": "library",
             "autoload": {
@@ -158,7 +209,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2018-06-02T00:36:19+00:00"
+            "time": "2018-08-25T21:46:01+00:00"
         },
         {
             "name": "fkooman/oauth2-server",
@@ -1411,16 +1462,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.3.1",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a"
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9b14c17860eccb440a0352a117a81eb754cff5a",
-                "reference": "f9b14c17860eccb440a0352a117a81eb754cff5a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
+                "reference": "34705f81bddc3f505b9599a2ef96e2b4315ba9b8",
                 "shasum": ""
             },
             "require": {
@@ -1491,7 +1542,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-08-07T06:44:28+00:00"
+            "time": "2018-08-22T06:39:21+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2150,7 +2201,9 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "eduvpn/common": 20
+        "eduvpn/common": 20,
+        "fkooman/jwt": 20,
+        "fkooman/oauth2-client": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
