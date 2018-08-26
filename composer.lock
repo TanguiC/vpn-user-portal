@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eduvpn/vpn-lib-common",
-                "reference": "f02024d3bd14808ee09809c59341422548c56ddf"
+                "reference": "6d6915675ac2e812f923fd0495d4e634941c7cce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/f02024d3bd14808ee09809c59341422548c56ddf",
-                "reference": "f02024d3bd14808ee09809c59341422548c56ddf",
+                "url": "https://api.github.com/repos/eduvpn/vpn-lib-common/zipball/6d6915675ac2e812f923fd0495d4e634941c7cce",
+                "reference": "6d6915675ac2e812f923fd0495d4e634941c7cce",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +115,7 @@
                 "email": "eduvpn@surfnet.nl",
                 "source": "https://github.com/eduvpn/vpn-lib-common"
             },
-            "time": "2018-08-26T09:22:01+00:00"
+            "time": "2018-08-26T14:19:23+00:00"
         },
         {
             "name": "fkooman/jwt",
@@ -123,7 +123,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-jwt",
-                "reference": "60a393dbd7af4505cf3a90e2391aa9a2febebdbb"
+                "reference": "b44e489016d8e9856ff2842a44efa19ce0676d79"
             },
             "require": {
                 "ext-hash": "*",
@@ -163,7 +163,7 @@
                 "email": "fkooman@tuxed.net",
                 "source": "https://git.tuxed.net/fkooman/php-jwt"
             },
-            "time": "2018-08-24T10:45:13+00:00"
+            "time": "2018-08-26T12:27:52+00:00"
         },
         {
             "name": "fkooman/oauth2-client",
@@ -171,7 +171,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.tuxed.net/fkooman/php-oauth2-client",
-                "reference": "ace54270dbe90a6abe9150cdac10dbb0ef0c1ed5"
+                "reference": "1b82c1045d00df58ba3f7e9fb79a166125c1d6c0"
             },
             "require": {
                 "ext-curl": "*",
@@ -209,7 +209,7 @@
                 }
             ],
             "description": "Very simple OAuth 2.0 client",
-            "time": "2018-08-25T21:46:01+00:00"
+            "time": "2018-08-26T14:09:37+00:00"
         },
         {
             "name": "fkooman/oauth2-server",

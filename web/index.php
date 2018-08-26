@@ -11,10 +11,8 @@ require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
 use fkooman\Jwt\Keys\PublicKey;
-use fkooman\Jwt\RS256;
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
-use fkooman\OAuth\Client\OpenIdClient;
 use fkooman\OAuth\Client\Provider;
 use fkooman\OAuth\Client\SessionTokenStorage;
 use fkooman\OAuth\Server\OAuthServer;
@@ -163,12 +161,12 @@ try {
                     $config->getSection('OpenIdAuthentication')->getItem('clientId'),
                     $config->getSection('OpenIdAuthentication')->getItem('clientSecret'),
                     $config->getSection('OpenIdAuthentication')->getItem('authorizeUri'),
-                    $config->getSection('OpenIdAuthentication')->getItem('tokenUri')
+                    $config->getSection('OpenIdAuthentication')->getItem('tokenUri'),
+                    new PublicKey($config->getSection('OpenIdAuthentication')->getItem('publicKey'))
                 ),
-                new OpenIdClient(
+                new OAuthClient(
                     new SessionTokenStorage(),
-                    new OAuthCurlHttpClient(['allowHttp' => true]),
-                    new RS256(new PublicKey($config->getSection('OpenIdAuthentication')->getItem('publicKey')))
+                    new OAuthCurlHttpClient(['allowHttp' => true])
                 )
             );
 
