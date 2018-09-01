@@ -10,7 +10,6 @@
 require_once dirname(__DIR__).'/vendor/autoload.php';
 $baseDir = dirname(__DIR__);
 
-use fkooman\Jwt\Keys\PublicKey;
 use fkooman\OAuth\Client\Http\CurlHttpClient as OAuthCurlHttpClient;
 use fkooman\OAuth\Client\OAuthClient;
 use fkooman\OAuth\Client\Provider;
@@ -155,17 +154,20 @@ try {
 
             break;
         case 'OpenIdAuthentication':
+            $provider = new Provider(
+                $config->getSection('OpenIdAuthentication')->getItem('clientId'),
+                $config->getSection('OpenIdAuthentication')->getItem('clientSecret'),
+                $config->getSection('OpenIdAuthentication')->getItem('authorizationEndpoint'),
+                $config->getSection('OpenIdAuthentication')->getItem('tokenEndpoint')
+            );
+            $provider->setIssuer($config->getSection('OpenIdAuthentication')->getItem('expectedIssuer'));
+
             $openIdAuthenicationHook = new OpenIdAuthenticationHook(
                 $session,
-                new Provider(
-                    $config->getSection('OpenIdAuthentication')->getItem('clientId'),
-                    $config->getSection('OpenIdAuthentication')->getItem('clientSecret'),
-                    $config->getSection('OpenIdAuthentication')->getItem('authorizeUri'),
-                    $config->getSection('OpenIdAuthentication')->getItem('tokenUri'),
-                    new PublicKey($config->getSection('OpenIdAuthentication')->getItem('publicKey'))
-                ),
+                $provider,
                 new OAuthClient(
                     new SessionTokenStorage(),
+                    // XXX we do NOT wnat to allow http!!!
                     new OAuthCurlHttpClient(['allowHttp' => true])
                 )
             );

@@ -60,13 +60,22 @@ return [
         //'attribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_6', // OID for eduPersonPrincipalName
 
         // add the entityID of the IdP to the user ID. This MUST be enabled
-        // if multiple IdPs are used *and* the attribute used for the user ID 
+        // if multiple IdPs are used *and* the attribute used for the user ID
         // is not enforced to be unique among the different IdPs
         'addEntityID' => false,
 
         // ** AUTHORIZATION | ENTITLEMENT **
         //'entitlementAttribute' => 'MELLON_eduPersonEntitlement',
         //'entitlementAttribute' => 'MELLON_urn:oid:1_3_6_1_4_1_5923_1_1_1_7' // OID for eduPersonEntitlement
+    ],
+
+    // OpenID Connect
+    'OpenIdAuthentication' => [
+        'clientId' => 'my_client_id',
+        'clientSecret' => 'my_client_secret',
+        'authorizationEndpoint' => 'http://localhost:8080/authorize.php',
+        'tokenEndpoint' => 'http://localhost:8080/token.php',
+        'expectedIssuer' => 'http://localhost:8080',
     ],
 
     // Connection to vpn-server-api

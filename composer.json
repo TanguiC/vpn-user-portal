@@ -31,10 +31,6 @@
         {
             "type": "vcs",
             "url": "https://git.tuxed.net/fkooman/php-oauth2-server"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.tuxed.net/fkooman/php-jwt"
         }
     ],
     "require": {
@@ -49,7 +45,6 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-spl": "*",
-        "fkooman/jwt": "dev-master",
         "fkooman/oauth2-client": "dev-oidc",
         "fkooman/oauth2-server": "^3",
         "fkooman/secookie": "^2",
